@@ -1,5 +1,11 @@
 #sudoku
 
+- Summary:
+  - This repository contains 3 files:
+    - sudoku_game.py: allows the user to solve a given 9 * 9 Sudoku puzzle
+    - sudoku_solver.py: solves a given 9 * 9 Sudoku puzzle
+    - proof.txt: proof that Sudoku is an intractable decision problem in NP with a non-polynomial time complexity
+
 - For sudoku_game.py:
 
   - please run sudoku_game.py using the following command: python3 sudoku_game.py
