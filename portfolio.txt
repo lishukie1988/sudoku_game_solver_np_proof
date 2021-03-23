@@ -1,0 +1,204 @@
+1.
+
+- Sudoku
+
+2.
+
+- Given:
+    - a square grid of n^2 * n^2 cells (3^2 * 3^2 for the portfolio)
+    - sectioned into n^2 blocks of smaller square grids of n * n cells (3^2 blocks of 3 * 3 cells for the portfolio)
+    - with initial unchangeable values placed in some cells from a set of n^2 possible values (set of 3^2 values (1-9) for the portfolio)
+
+- Objective:
+    - fill the empty & changeable cells with values so that:
+        - all n^2 cells in each row contain all the values in the given set of n^2 values (so each cell in the row has a unique value)
+        - all n^2 cells in each column contain all the values in the given set of n^2 values (so each cell in the column has a unique value)
+        - all n^2 cells in each n * n block contain all the values in the given set of n^2 values (so each cell in the block has a unique value)
+
+3.
+
+- sudoku_q3q4.py
+    - function: play_sudoku
+
+4.
+
+- sudoku_q3q4.py
+    - function: verify_solution
+
+5.
+
+- To proof that the verification algotihm correctly verifies a given solution or sudoku board, we show that:
+    - a sudoku board is considered solved by the algorithm  
+        IF & ONLY IF
+    - 1) all n^2 cells in each row contain all the values in the given set of n^2 values (so each cell in the row has a unique value)
+    - 2) all n^2 cells in each column contain all the values in the given set of n^2 values (so each cell in the column has a unique value)
+    - 3) all n^2 cells in each block contain all the values in the given set of n^2 values (so each cell in the block has a unique value)
+
+- algorithm analysis for proof of correctness:
+
+    - def verify_solution(sudoku_arr):
+
+        # verify all cells in the entire sudoku board contain value in range [1,9]
+        # thus verifies the second half of all 3 objectives (all cell values are in given set of n^2 values)
+        - for row in range(9):
+            - for col in range(9):
+                # if current cell contains value out of range
+                - if sudoku_arr[row][col] > 9 or sudoku_arr[row][col] < 1:
+                    # display NOT SOLVED & return FALSE
+                    - print("Not solved, please continue playing!")
+                    - return False
+
+        # verify all rows contain cells with unique values
+        # thus also verifies the first half of objective 1 (all n^2 cells in each row contain all the values in the given set of n^2 values)
+        - for row in range(9):
+            # array to store existence of a value in the current row
+            - value_existence = [0 for x in range(10)]
+            - for cell in range(9):
+                # if value of current cell already exists in the current row
+                - if value_existence[sudoku_arr[row][cell]] == 1:
+                    # display NOT SOLVED & return FALSE
+                    - print("Not solved, please continue playing!")
+                    - return False
+                # if not, indicate its existence in the array
+                - else:
+                    - value_existence[sudoku_arr[row][cell]] = 1
+
+        # verify all columns contain cells with unique values
+        # thus also verifies the first half of objective 2 (all n^2 cells in each column contain all the values in the given set of n^2 values)
+        - for col in range(9):
+            # array to store existence of a value in the current column
+            - value_existence = [0 for x in range(10)]
+            - for cell in range(9):
+                # if value of current cell already exists in the current column
+                - if value_existence[sudoku_arr[cell][col]] == 1:
+                    # display NOT SOLVED & return FALSE
+                    - print("Not solved, please continue playing!")
+                    - return False
+                # if not, indicate its existence in the array
+                - else:
+                    - value_existence[sudoku_arr[cell][col]] = 1
+        
+        # verify all blocks contain cells with unique values
+        # thus also verifies the first half of objective 3 (all n^2 cells in each block contain all the values in the given set of n^2 values)
+        - for row in range(0,9,3):
+            - for col in range(0,9,3):
+                # array to store existence of a value in the current block
+                - value_existence = [0 for x in range(10)]
+                # verify all cells in the current block contain unique values
+                - for subrow in range(row, row + 3):
+                    - for subcol in range(col, col + 3):
+                        # if value of current cell already exists in the current block
+                        - if value_existence[sudoku_arr[subrow][subcol]] == 1:
+                            # display NOT SOLVED & return FALSE
+                            - print("Not solved, please continue playing!")
+                            - return False
+                        # if not, indicate its existence in the array
+                        - else:
+                            - value_existence[sudoku_arr[subrow][subcol]] = 1
+
+        # if no rules are violated, display SOLVED & return TRUE
+        - print("Solved!")
+        - return True   
+
+    # Since the algorithm:
+    #   - returns TRUE if all 3 objectives are met
+    #   - returns FALSE if any of the 3 objectives are not met
+    # We can conclude that the algorithm considers a sudoku board solved IF & ONLY IF all 3 objectives are met
+
+
+6.
+
+- answer: O(m^2)
+
+- proof - algorithm analysis for runtime:
+
+    # let m = number of rows of entire sudoku board
+    #       = number of columns of entire sudoku board
+    #       = number of values in given set of values
+    - def verify_solution(sudoku_arr):
+
+        # m iterations
+        - for row in range(9):
+            # m iterations
+            - for col in range(9):
+                # O(m^2): check each cell to see if it contains a value in given set
+                - if sudoku_arr[row][col] > 9 or sudoku_arr[row][col] < 1:
+                    - print("Not solved, please continue playing!")
+                    - return False
+
+        # m iterations
+        - for row in range(9):
+            - value_existence = [0 for x in range(10)]
+            # m iterations
+            - for cell in range(9):
+                # O(m^2): check each cell in each row to see if it contains a value unique to it in that row
+                - if value_existence[sudoku_arr[row][cell]] == 1:
+                    - print("Not solved, please continue playing!")
+                    - return False
+                - else:
+                    - value_existence[sudoku_arr[row][cell]] = 1
+
+        # m iterations
+        - for col in range(9):
+            - value_existence =  [0 for x in range(10)]
+            # m iterations
+            - for cell in range(9):
+                # O(m^2): check each cell in each column to see if it contains a value unique to it in that column
+                - if value_existence[sudoku_arr[cell][col]] == 1:
+                    - print("Not solved, please continue playing!")
+                    - return False
+                - else:
+                    - value_existence[sudoku_arr[cell][col]] = 1
+        
+        # sqrt(m) iterations
+        - for row in range(0,9,3):
+            # sqrt(m) iterations
+            - for col in range(0,9,3):
+                - value_existence = [0 for x in range(10)]
+                # sqrt(m) iterations
+                - for subrow in range(row, row + 3):
+                    # sqrt(m) iterations
+                    - for subcol in range(col, col + 3):
+                        # O(m^2): check each cell in each block to see if it contains a value unique to it in that block
+                        - if value_existence[sudoku_arr[subrow][subcol]] == 1:
+                            - print("Not solved, please continue playing!")
+                            - return False
+                        - else:
+                            - value_existence[sudoku_arr[subrow][subcol]] = 1
+
+        - print("Solved!")
+        - return True   
+
+- proof - runtime calculation:
+    - total runtime = (check each cell to see if it contains a value in given set)
+                       +
+                      (check each cell in each row to see if it contains a value unique to it in that row)
+                       +
+                      (check each cell in each column to see if it contains a value unique to it in that column)
+                       +
+                      (check each cell in each block to see if it contains a value unique to it in that block)
+                    = O(m^2) + O(m^2) + O(m^2) + O(m^2)
+                    = O(m^2)
+
+
+Bonus A)
+
+- sudoku_bonusA.py
+
+Bonus B)
+
+- answer: O(m^(m^2))
+
+- proof:
+
+    - let m = number of rows in the entire sudoku board
+            = number of columns in the entire sudoku board
+            = number of values in given set of values
+    
+    - number of empty cells to be assigned/solved: O(m^2)
+    - number of values to be tested while solving an empty cell: O(m)
+    
+    - total runtime:
+        = (number of values to be tested while solving an empty cell) ^ (number of empty cells to be assigned/solved)
+        = O(m) ^ O(m^2)
+        = O(m^(m^2))
